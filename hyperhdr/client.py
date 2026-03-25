@@ -462,8 +462,15 @@ class HyperHDRClient:
         try:
             self._writer.write(output)
             await self._writer.drain()
-        except (ConnectionError, OSError) as exc:
-            if isinstance(exc, OSError) and exc.errno not in (
+        except ConnectionError as exc:
+            _LOGGER.warning(
+                "Could not write data for HyperHDR (%s): %s",
+                self._host_port,
+                repr(exc),
+            )
+            return False
+        except OSError as exc:
+            if exc.errno not in (
                 errno.EHOSTUNREACH, errno.ENETUNREACH, errno.ECONNREFUSED, errno.ETIMEDOUT, errno.EHOSTDOWN
             ):
                 raise
@@ -488,8 +495,14 @@ class HyperHDRClient:
         try:
             future_resp = self._reader.readline()
             resp = await asyncio.wait_for(future_resp, timeout=timeout_secs)
-        except (ConnectionError, OSError) as exc:
-            if isinstance(exc, OSError) and exc.errno not in (
+        except ConnectionError as exc:
+            _LOGGER.warning(
+                "Could not write data for HyperHDR (%s): %s",
+                self._host_port,
+                repr(exc),
+            )
+        except OSError as exc:
+            if exc.errno not in (
                 errno.EHOSTUNREACH, errno.ENETUNREACH, errno.ECONNREFUSED, errno.ETIMEDOUT, errno.EHOSTDOWN
             ):
                 raise
