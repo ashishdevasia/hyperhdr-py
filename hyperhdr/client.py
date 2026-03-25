@@ -490,7 +490,7 @@ class HyperHDRClient:
             resp = await asyncio.wait_for(future_resp, timeout=timeout_secs)
         except (ConnectionError, OSError) as exc:
             if isinstance(exc, OSError) and exc.errno not in (
-                    errno.EHOSTUNREACH, errno.ENETUNREACH, errno.ECONNREFUSED, errno.ETIMEDOUT, errno.EHOSTDOWN
+                errno.EHOSTUNREACH, errno.ENETUNREACH, errno.ECONNREFUSED, errno.ETIMEDOUT, errno.EHOSTDOWN
             ):
                 raise
             _LOGGER.warning("Connection to HyperHDR lost (%s) ...", self._host_port)
